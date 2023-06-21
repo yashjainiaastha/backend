@@ -13,18 +13,13 @@ const createCategory = async (req ,res)=>{
         })
         await taskCategory.save()
         res.status(201).json({taskCategory});
-   
-
-    // const taskCategory = await categories.create(req.body)
  
     
 }
 
 const getTaskByCategory =  async (req, res) => {
-    // const user = req.params.user;
     try {
       const taskCountByCategory = await TaskModel.aggregate([
-        // { $match: { user: user } },
         { $group: { _id: '$categoryId', TaskCount: { $sum: 1 } } },
       ]);
   
@@ -44,3 +39,5 @@ const getCategory = async (req , res) => {
 
 
 module.exports = {createCategory , getCategory , getTaskByCategory};
+
+

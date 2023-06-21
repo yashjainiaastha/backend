@@ -1,12 +1,4 @@
-const { token } = require('morgan');
 const TaskModel = require('../model/TaskModel')
-const jwt = require('jsonwebtoken');
-// const {ObjectId } = require('mongodb');
-
-
-
-
-const SECRET_KEY = 'Node_API'
 const getTaskByStatus = async (req, res) => {
     
     try {
@@ -83,8 +75,5 @@ const deleteTask = async (req ,res) => {
  
     res.json({task})
 }
-
-
-
 
 module.exports = {createTask , updateTask , deleteTask , getTask ,getTaskByStatus};

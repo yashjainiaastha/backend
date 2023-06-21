@@ -1,6 +1,6 @@
 const express = require("express");
 const {createCategory , getCategory ,getTaskByCategory} = require("../controller/categoryController");
-const auth = require("../meddlewares/auth");
+const auth = require("../middlewares/auth");
 const Categoryrouter = express.Router()
 
 Categoryrouter.post("/",auth,createCategory)
