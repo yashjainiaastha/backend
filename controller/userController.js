@@ -4,14 +4,15 @@ const  SECRET_KEY = "API_TEST"
 const jwt = require('jsonwebtoken');
 const signup = async (req, res) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password } = req.body;
+    console.log(req.body);
 
     try {
 
 
         const isUserPresent = await UserModels.findOne({ email: email });
         if (isUserPresent) {
-            return res.status(4).json({ message: "User already exist" })
+            return res.status(400).json({ message: "User already exist" })
         }
 
 
@@ -25,11 +26,14 @@ const signup = async (req, res) => {
         });
 
         const token = jwt.sign({ email: createUser.email, id: createUser._id }, SECRET_KEY);
-        res.status(201).json({ user: createUser, token: token })
+      
+           return res.status(200).json({ user: createUser, token: token })
+
+      
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "something went wrong" });
+       return res.status(500).json({ message: "something went wrong" });
 
     }
 
@@ -56,7 +60,7 @@ const signin = async (req, res) => {
         }
 
 
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET_KEY , { expiresIn: "2h" });
+        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET_KEY , { expiresIn: "10m" });
 
         res.status(201).json({ user: existingUser, token: token })
  

@@ -1,9 +1,8 @@
 const express = require('express');
 const uploadfile = express.Router();
 const multer = require('multer');
-const auth = require('../middleware/auth')
 const path = require('path')
-const mymodel = require('../model/fileModel')
+const file = require('../model/fileModel')
 
 let storage= multer.diskStorage({
     destination: path.join(__dirname,"../uploads"),
@@ -12,54 +11,38 @@ const uploads = multer({
     storage : storage,    
     })
 
-uploadfile.post('/add',auth,uploads.single('image'),(req,res)=>{
-    const Newfile = new mymodel({
-        file: req.file.filename,
-        structure:req.file.destination ,
-        userId:req.userId
+    uploadfile.post('/add', auth, uploads.single('image'), async (req, res) => {
+    const  virtualPath  = req.body;
+    
+    try {
+    const newFile = new file({
+    fileName: req.file.filename,
+    pathName: req.file.destination,
+    userId: req.userId,
+    virtualPath: virtualPath
     });
-    try {               
-        Newfile.save();
-        res.status(201).json({Newfile});                 
-        }catch(error){
-            res.status(400).json({msg: "not save file"})
-        }    
-})
-uploadfile.get('/get/:id',auth,async(req,res)=> {
-    const id = req.params.id;
-    try{
-        const files = await mymodel.find({userId:id});
-        console.log(files)
-        res.status(200).send({success: true, msg: 'categories ', data : files})
-
-    }catch(error){
-        res.status(400).json({massage: "Some thing went wrong in get file"})
-        console.log(error)
-    }
-})
-
-uploadfile.get('/search/:id/:name', auth,async(req,res)=>{
-    const id = req.params.id;
-    const file_name = req.params.name;
-    try{
-        const file = await mymodel.find({userId:id,file:file_name})
-        if(id!==req.userId){
-            res.status(200).send({msg : "Invalid User"})
-            }
-        else if (file.length == 0 ){
-            res.status(200).send({msg :"File not found"})
+    await newFile.save();
+    res.status(201).json({ file: newFile });
+    } 
+    catch (error) {
+    res.status(400).json({ error: 'Unable to save file' });
         }
-        else{res.status(200).send({msg : "Files",data:file})}
-        
+    });
 
-    }catch(error){
-        res.status(400).send({msg : "Unable to search"})
-    }
-})
-
-uploadfile.get
-module.exports ={uploadfile}
-
+    uploadfile.get('/search/:virtualPath', async (req, res) => {
+        const virtualPath = req.params.virtualPath;
+      
+        try {
+            const foundFile = await file.findOne({ virtualPath: virtualPath });
+          if (!foundFile) {
+            return res.status(404).json({ error: 'File not found' });
+          }
+        } catch (error) {
+            res.status(400).json({ error: 'Invalid' });
+                }
+      })
+      
+      module.exports = uploadfile;
 
 
 

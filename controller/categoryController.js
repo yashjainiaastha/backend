@@ -14,7 +14,6 @@ const createCategory = async (req ,res)=>{
         await taskCategory.save()
         res.status(201).json({taskCategory});
         
-    
 }
 
 const getTaskByCategory =  async (req, res) => {
