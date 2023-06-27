@@ -60,6 +60,22 @@ const createTask = async (req, res) => {
 
 }
 
+const catByTask = async (req, res) => {
+  try {
+
+      const taskData = await taskModel.find({ _id: req.body.task_id }).populate('catId');
+      res.status(200).json(taskData)
+
+
+
+  } catch (err) {
+      console.log(err)
+  }
+
+}
+
+
+
 const updateTask = async (req , res) => {
     const {id:taskID} = req.params
     const task = await TaskModel.findOneAndUpdate({_id:taskID},req.body , {
@@ -76,4 +92,4 @@ const deleteTask = async (req ,res) => {
     res.json({task})
 }
 
-module.exports = {createTask , updateTask , deleteTask , getTask ,getTaskByStatus};
+module.exports = {createTask , updateTask , deleteTask , getTask ,getTaskByStatus ,catByTask};

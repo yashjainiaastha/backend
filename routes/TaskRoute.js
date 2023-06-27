@@ -8,5 +8,7 @@ router.post('/update' ,auth, createTask)
 router.delete('/:id',auth,deleteTask)
 router.put("/:id",auth,updateTask)
 router.get('/getTaskByStatus' ,auth, getTaskByStatus)
+router.post('/catByTask',catByTask)
+
 
 module.exports = router

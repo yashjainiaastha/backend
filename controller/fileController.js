@@ -3,6 +3,7 @@ const uploadfile = express.Router();
 const multer = require('multer');
 const path = require('path')
 const file = require('../model/fileModel')
+const auth = require("../middlewares/auth")
 
 let storage= multer.diskStorage({
     destination: path.join(__dirname,"../uploads"),
